@@ -4,6 +4,7 @@ import type {
   TrackingEvent,
   Route,
   WarehouseMetrics,
+  PortDwellRisk,
 } from "./types";
 
 export const demoCarriers: Carrier[] = [
@@ -663,6 +664,33 @@ export const demoTrackingEvents: TrackingEvent[] = [
     description: "Arrived Richmond hub. On schedule.",
     latitude: 37.5407,
     longitude: -77.436,
+  },
+];
+
+export const demoPortDwellRisks: PortDwellRisk[] = [
+  {
+    shipmentId: "shp_004",
+    facility: "Rotterdam Port, NL",
+    dwellHours: 25.5,
+    freeTimeHoursRemaining: 10,
+    riskLevel: "high",
+    nextAction: "Pre-clear missing HS code declaration and reserve drayage slot before free time expires.",
+  },
+  {
+    shipmentId: "shp_009",
+    facility: "London Heathrow, UK",
+    dwellHours: 14.25,
+    freeTimeHoursRemaining: 6,
+    riskLevel: "critical",
+    nextAction: "Escalate customs broker review for high-value electronics and alert consignee on detention exposure.",
+  },
+  {
+    shipmentId: "shp_012",
+    facility: "Savannah checkpoint",
+    dwellHours: 4,
+    freeTimeHoursRemaining: 28,
+    riskLevel: "medium",
+    nextAction: "Confirm receiving appointment and keep a backup carrier on standby for the next dray leg.",
   },
 ];
 

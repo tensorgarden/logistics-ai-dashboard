@@ -54,6 +54,17 @@ export interface TrackingEvent {
   longitude: number;
 }
 
+export type PortDwellRiskLevel = "low" | "medium" | "high" | "critical";
+
+export interface PortDwellRisk {
+  shipmentId: string;
+  facility: string;
+  dwellHours: number;
+  freeTimeHoursRemaining: number;
+  riskLevel: PortDwellRiskLevel;
+  nextAction: string;
+}
+
 export interface RouteSegment {
   from: string;
   to: string;

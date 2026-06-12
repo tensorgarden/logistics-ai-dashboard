@@ -5,6 +5,7 @@ import {
   demoTrackingEvents,
   demoRoutes,
   demoMetrics,
+  demoPortDwellRisks,
 } from "@/lib/demo-data";
 
 describe("Logistics AI Dashboard — demo data integrity", () => {
@@ -100,6 +101,30 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       expect(s.value).toBeGreaterThan(0);
       expect(s.weight).toBeGreaterThan(0);
       expect(s.packages).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("dwell risk alerts reference active shipments and include playbook actions", () => {
+    const shipmentIds = new Set(demoShipments.map((s) => s.id));
+    for (const risk of demoPortDwellRisks) {
+      const shipment = demoShipments.find((s) => s.id === risk.shipmentId);
+      expect(shipmentIds.has(risk.shipmentId)).toBe(true);
+      expect(shipment?.actualDelivery).toBeNull();
+      expect(risk.dwellHours).toBeGreaterThanOrEqual(0);
+      expect(risk.freeTimeHoursRemaining).toBeGreaterThanOrEqual(0);
+      expect(risk.nextAction.length).toBeGreaterThan(25);
+    }
+  });
+
+  it("high-severity dwell risks have urgent free-time windows", () => {
+    const urgentLevels = new Set(["high", "critical"]);
+    const urgentRisks = demoPortDwellRisks.filter((risk) =>
+      urgentLevels.has(risk.riskLevel)
+    );
+
+    expect(urgentRisks.length).toBeGreaterThanOrEqual(1);
+    for (const risk of urgentRisks) {
+      expect(risk.freeTimeHoursRemaining).toBeLessThanOrEqual(12);
     }
   });
 });
