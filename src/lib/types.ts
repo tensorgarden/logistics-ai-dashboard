@@ -63,6 +63,8 @@ export interface PortDwellRisk {
   freeTimeHoursRemaining: number;
   riskLevel: PortDwellRiskLevel;
   nextAction: string;
+  detentionDailyRate: number;
+  estimatedDemurrageCost: number;
 }
 
 export interface RouteSegment {

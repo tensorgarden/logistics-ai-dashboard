@@ -675,6 +675,8 @@ export const demoPortDwellRisks: PortDwellRisk[] = [
     freeTimeHoursRemaining: 10,
     riskLevel: "high",
     nextAction: "Pre-clear missing HS code declaration and reserve drayage slot before free time expires.",
+    detentionDailyRate: 450,
+    estimatedDemurrageCost: 0,
   },
   {
     shipmentId: "shp_009",
@@ -683,6 +685,8 @@ export const demoPortDwellRisks: PortDwellRisk[] = [
     freeTimeHoursRemaining: 6,
     riskLevel: "critical",
     nextAction: "Escalate customs broker review for high-value electronics and alert consignee on detention exposure.",
+    detentionDailyRate: 625,
+    estimatedDemurrageCost: 520,
   },
   {
     shipmentId: "shp_012",
@@ -691,6 +695,8 @@ export const demoPortDwellRisks: PortDwellRisk[] = [
     freeTimeHoursRemaining: 28,
     riskLevel: "medium",
     nextAction: "Confirm receiving appointment and keep a backup carrier on standby for the next dray leg.",
+    detentionDailyRate: 195,
+    estimatedDemurrageCost: 0,
   },
 ];
 

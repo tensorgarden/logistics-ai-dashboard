@@ -127,4 +127,37 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       expect(risk.freeTimeHoursRemaining).toBeLessThanOrEqual(12);
     }
   });
+
+  it("all dwell risks carry a positive detention daily rate", () => {
+    for (const risk of demoPortDwellRisks) {
+      expect(risk.detentionDailyRate).toBeGreaterThan(0);
+    }
+  });
+
+  it("estimated demurrage cost is never negative", () => {
+    for (const risk of demoPortDwellRisks) {
+      expect(risk.estimatedDemurrageCost).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it("critical risk has the highest detention daily rate", () => {
+    const critical = demoPortDwellRisks.find((r) => r.riskLevel === "critical");
+    const others = demoPortDwellRisks.filter((r) => r.riskLevel !== "critical");
+    expect(critical).toBeDefined();
+    for (const r of others) {
+      expect(critical!.detentionDailyRate).toBeGreaterThan(r.detentionDailyRate);
+    }
+  });
+
+  it("risks with minimal free time show accrued demurrage cost", () => {
+    const urgent = demoPortDwellRisks.filter(
+      (r) => r.freeTimeHoursRemaining <= 6
+    );
+    for (const r of urgent) {
+      expect(
+        r.estimatedDemurrageCost,
+        `Risk at ${r.facility} has ${r.freeTimeHoursRemaining}h free but shows $0 demurrage — should reflect exposure`
+      ).toBeGreaterThan(0);
+    }
+  });
 });
