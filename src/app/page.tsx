@@ -4,8 +4,15 @@ import {
   demoRoutes,
   demoTrackingEvents,
   demoMetrics,
+  demoDockAppointmentRisks,
 } from "@/lib/demo-data";
-import type { Shipment, Carrier, TrackingEvent, Route } from "@/lib/types";
+import type {
+  Shipment,
+  Carrier,
+  TrackingEvent,
+  Route,
+  DockAppointmentRisk,
+} from "@/lib/types";
 
 // --- Reusable components ---
 
@@ -145,6 +152,17 @@ function statusTone(status: string): "blue" | "red" | "green" | "amber" | "slate
     cancelled: "slate",
   };
   return map[status] || "slate";
+}
+
+function dockStatusTone(
+  status: DockAppointmentRisk["status"]
+): "green" | "amber" | "red" {
+  const map: Record<DockAppointmentRisk["status"], "green" | "amber" | "red"> = {
+    ready: "green",
+    at_risk: "amber",
+    blocked: "red",
+  };
+  return map[status];
 }
 
 function findCarrier(id: string): Carrier | undefined {
@@ -461,6 +479,75 @@ function DeliveryTimeline() {
   );
 }
 
+// --- Dock appointment readiness ---
+
+function DockAppointmentPanel() {
+  const blockedOrAtRisk = demoDockAppointmentRisks.filter(
+    (risk) => risk.status !== "ready"
+  ).length;
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-bold text-slate-900">
+          Dock Appointment Readiness
+        </h2>
+        <Badge tone={blockedOrAtRisk > 0 ? "amber" : "green"}>
+          {blockedOrAtRisk} interventions
+        </Badge>
+      </div>
+      <div className="space-y-3">
+        {demoDockAppointmentRisks.map((risk) => {
+          const shipment = demoShipments.find((s) => s.id === risk.shipmentId);
+          return (
+            <div
+              key={`${risk.shipmentId}-${risk.facility}`}
+              className="rounded-xl border border-amber-100 bg-amber-50/40 p-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-sm text-slate-900">
+                    {risk.facility}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {shipment?.trackingNumber || risk.shipmentId} · {risk.appointmentWindow}
+                  </p>
+                </div>
+                <Badge tone={dockStatusTone(risk.status)}>
+                  {risk.status.replace("_", " ")}
+                </Badge>
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs text-slate-500">
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.etaMinutesAway}m
+                  </div>
+                  <div>live ETA</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.freightStaged ? "yes" : "no"}
+                  </div>
+                  <div>freight staged</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.checkInMode}
+                  </div>
+                  <div>check-in</div>
+                </div>
+              </div>
+              <p className="mt-3 text-xs font-medium text-amber-800">
+                {risk.mitigation}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
 // --- Alert panel ---
 
 function AlertPanel() {
@@ -565,6 +652,7 @@ export default function Home() {
 
         {/* Side column */}
         <div className="space-y-6">
+          <DockAppointmentPanel />
           <AlertPanel />
           <DeliveryTimeline />
         </div>

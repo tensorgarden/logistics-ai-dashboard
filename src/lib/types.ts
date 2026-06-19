@@ -56,6 +56,10 @@ export interface TrackingEvent {
 
 export type PortDwellRiskLevel = "low" | "medium" | "high" | "critical";
 
+export type DockAppointmentStatus = "ready" | "at_risk" | "blocked";
+
+export type DockCheckInMode = "digital" | "manual";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -65,6 +69,18 @@ export interface PortDwellRisk {
   nextAction: string;
   detentionDailyRate: number;
   estimatedDemurrageCost: number;
+}
+
+export interface DockAppointmentRisk {
+  shipmentId: string;
+  facility: string;
+  appointmentWindow: string;
+  etaMinutesAway: number;
+  dockTurnMinutes: number;
+  freightStaged: boolean;
+  checkInMode: DockCheckInMode;
+  status: DockAppointmentStatus;
+  mitigation: string;
 }
 
 export interface RouteSegment {

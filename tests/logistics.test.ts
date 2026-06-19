@@ -6,6 +6,7 @@ import {
   demoRoutes,
   demoMetrics,
   demoPortDwellRisks,
+  demoDockAppointmentRisks,
 } from "@/lib/demo-data";
 
 describe("Logistics AI Dashboard — demo data integrity", () => {
@@ -158,6 +159,34 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
         r.estimatedDemurrageCost,
         `Risk at ${r.facility} has ${r.freeTimeHoursRemaining}h free but shows $0 demurrage — should reflect exposure`
       ).toBeGreaterThan(0);
+    }
+  });
+
+  it("dock appointment risks reference active shipments and live ETA data", () => {
+    for (const risk of demoDockAppointmentRisks) {
+      const shipment = demoShipments.find((s) => s.id === risk.shipmentId);
+      expect(shipment, `Missing shipment for ${risk.facility}`).toBeDefined();
+      expect(shipment?.actualDelivery).toBeNull();
+      expect(risk.etaMinutesAway).toBeGreaterThan(0);
+      expect(risk.dockTurnMinutes).toBeGreaterThan(0);
+      expect(risk.appointmentWindow.length).toBeGreaterThan(5);
+    }
+  });
+
+  it("at-risk dock appointments identify a practical detention root cause", () => {
+    const interventions = demoDockAppointmentRisks.filter(
+      (risk) => risk.status !== "ready"
+    );
+
+    expect(interventions.length).toBeGreaterThanOrEqual(1);
+    for (const risk of interventions) {
+      const hasOperationalRootCause =
+        risk.freightStaged === false ||
+        risk.checkInMode === "manual" ||
+        risk.dockTurnMinutes > 60;
+
+      expect(hasOperationalRootCause).toBe(true);
+      expect(risk.mitigation.length).toBeGreaterThan(50);
     }
   });
 });

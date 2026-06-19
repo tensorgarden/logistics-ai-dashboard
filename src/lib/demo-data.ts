@@ -5,6 +5,7 @@ import type {
   Route,
   WarehouseMetrics,
   PortDwellRisk,
+  DockAppointmentRisk,
 } from "./types";
 
 export const demoCarriers: Carrier[] = [
@@ -697,6 +698,45 @@ export const demoPortDwellRisks: PortDwellRisk[] = [
     nextAction: "Confirm receiving appointment and keep a backup carrier on standby for the next dray leg.",
     detentionDailyRate: 195,
     estimatedDemurrageCost: 0,
+  },
+];
+
+export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
+  {
+    shipmentId: "shp_002",
+    facility: "St. Louis rail yard",
+    appointmentWindow: "09:30-10:15 CT",
+    etaMinutesAway: 42,
+    dockTurnMinutes: 90,
+    freightStaged: false,
+    checkInMode: "manual",
+    status: "at_risk",
+    mitigation:
+      "Move the appointment to a 90-minute unloading slot, stage receiving labor now, and send a digital gate pass before arrival.",
+  },
+  {
+    shipmentId: "shp_007",
+    facility: "Jacksonville cross-dock",
+    appointmentWindow: "11:00-11:45 ET",
+    etaMinutesAway: 28,
+    dockTurnMinutes: 75,
+    freightStaged: true,
+    checkInMode: "digital",
+    status: "ready",
+    mitigation:
+      "Keep Dock 4 reserved and notify the forklift lead when the truck crosses the 15-minute geofence.",
+  },
+  {
+    shipmentId: "shp_012",
+    facility: "Richmond hub",
+    appointmentWindow: "15:00-15:30 ET",
+    etaMinutesAway: 18,
+    dockTurnMinutes: 80,
+    freightStaged: false,
+    checkInMode: "digital",
+    status: "blocked",
+    mitigation:
+      "Escalate staging immediately because the live ETA is inside the appointment window and unload work exceeds the slot.",
   },
 ];
 
