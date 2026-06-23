@@ -169,6 +169,7 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       expect(shipment?.actualDelivery).toBeNull();
       expect(risk.etaMinutesAway).toBeGreaterThan(0);
       expect(risk.dockTurnMinutes).toBeGreaterThan(0);
+      expect(risk.appointmentSlotMinutes).toBeGreaterThan(0);
       expect(risk.appointmentWindow.length).toBeGreaterThan(5);
     }
   });
@@ -183,10 +184,25 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       const hasOperationalRootCause =
         risk.freightStaged === false ||
         risk.checkInMode === "manual" ||
-        risk.dockTurnMinutes > 60;
+        risk.dockTurnMinutes > risk.appointmentSlotMinutes;
 
       expect(hasOperationalRootCause).toBe(true);
       expect(risk.mitigation.length).toBeGreaterThan(50);
+    }
+  });
+
+  it("ready dock appointments fit the reserved slot and avoid manual gate check-in", () => {
+    const readyAppointments = demoDockAppointmentRisks.filter(
+      (risk) => risk.status === "ready"
+    );
+
+    expect(readyAppointments.length).toBeGreaterThanOrEqual(1);
+    for (const risk of readyAppointments) {
+      expect(risk.freightStaged).toBe(true);
+      expect(risk.checkInMode).toBe("digital");
+      expect(risk.dockTurnMinutes).toBeLessThanOrEqual(
+        risk.appointmentSlotMinutes
+      );
     }
   });
 });

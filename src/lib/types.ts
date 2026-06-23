@@ -75,6 +75,7 @@ export interface DockAppointmentRisk {
   shipmentId: string;
   facility: string;
   appointmentWindow: string;
+  appointmentSlotMinutes: number;
   etaMinutesAway: number;
   dockTurnMinutes: number;
   freightStaged: boolean;

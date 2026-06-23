@@ -517,12 +517,18 @@ function DockAppointmentPanel() {
                   {risk.status.replace("_", " ")}
                 </Badge>
               </div>
-              <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs text-slate-500">
+              <div className="mt-3 grid grid-cols-2 gap-2 text-center text-xs text-slate-500 sm:grid-cols-4">
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
                     {risk.etaMinutesAway}m
                   </div>
                   <div>live ETA</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.dockTurnMinutes}m/{risk.appointmentSlotMinutes}m
+                  </div>
+                  <div>turn / slot</div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
