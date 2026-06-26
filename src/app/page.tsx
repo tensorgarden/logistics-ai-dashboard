@@ -517,7 +517,7 @@ function DockAppointmentPanel() {
                   {risk.status.replace("_", " ")}
                 </Badge>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-center text-xs text-slate-500 sm:grid-cols-4">
+              <div className="mt-3 grid grid-cols-2 gap-2 text-center text-xs text-slate-500 sm:grid-cols-3">
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
                     {risk.etaMinutesAway}m
@@ -541,6 +541,20 @@ function DockAppointmentPanel() {
                     {risk.checkInMode}
                   </div>
                   <div>check-in</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.rescheduleByMinutes
+                      ? `${risk.rescheduleByMinutes}m`
+                      : "monitor"}
+                  </div>
+                  <div>rebook SLA</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.receiverConstraint.replace("_", " ")}
+                  </div>
+                  <div>constraint</div>
                 </div>
               </div>
               <p className="mt-3 text-xs font-medium text-amber-800">

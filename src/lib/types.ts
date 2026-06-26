@@ -60,6 +60,13 @@ export type DockAppointmentStatus = "ready" | "at_risk" | "blocked";
 
 export type DockCheckInMode = "digital" | "manual";
 
+export type DockAppointmentConstraint =
+  | "yard_congestion"
+  | "receiver_closed"
+  | "unstaged_freight"
+  | "slot_overrun"
+  | "none";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -80,6 +87,8 @@ export interface DockAppointmentRisk {
   dockTurnMinutes: number;
   freightStaged: boolean;
   checkInMode: DockCheckInMode;
+  receiverConstraint: DockAppointmentConstraint;
+  rescheduleByMinutes: number | null;
   status: DockAppointmentStatus;
   mitigation: string;
 }

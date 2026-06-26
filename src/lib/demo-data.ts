@@ -711,6 +711,8 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     dockTurnMinutes: 90,
     freightStaged: false,
     checkInMode: "manual",
+    receiverConstraint: "yard_congestion",
+    rescheduleByMinutes: 20,
     status: "at_risk",
     mitigation:
       "Move the appointment to a 90-minute unloading slot, stage receiving labor now, and send a digital gate pass before arrival.",
@@ -724,6 +726,8 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     dockTurnMinutes: 75,
     freightStaged: true,
     checkInMode: "digital",
+    receiverConstraint: "none",
+    rescheduleByMinutes: null,
     status: "ready",
     mitigation:
       "Keep Dock 4 reserved and notify the forklift lead when the truck crosses the 15-minute geofence.",
@@ -737,9 +741,11 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     dockTurnMinutes: 80,
     freightStaged: false,
     checkInMode: "digital",
+    receiverConstraint: "receiver_closed",
+    rescheduleByMinutes: 10,
     status: "blocked",
     mitigation:
-      "Escalate staging immediately because the live ETA is inside the appointment window and unload work exceeds the slot.",
+      "Escalate staging immediately and rebook before the receiver closes at 15:30 because the live ETA is inside the appointment window.",
   },
 ];
 

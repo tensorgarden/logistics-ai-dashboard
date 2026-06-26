@@ -187,6 +187,12 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
         risk.dockTurnMinutes > risk.appointmentSlotMinutes;
 
       expect(hasOperationalRootCause).toBe(true);
+      expect(risk.receiverConstraint).not.toBe("none");
+      expect(risk.rescheduleByMinutes).not.toBeNull();
+      expect(risk.rescheduleByMinutes!).toBeGreaterThan(0);
+      expect(risk.rescheduleByMinutes!).toBeLessThanOrEqual(
+        risk.etaMinutesAway
+      );
       expect(risk.mitigation.length).toBeGreaterThan(50);
     }
   });
@@ -200,6 +206,8 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     for (const risk of readyAppointments) {
       expect(risk.freightStaged).toBe(true);
       expect(risk.checkInMode).toBe("digital");
+      expect(risk.receiverConstraint).toBe("none");
+      expect(risk.rescheduleByMinutes).toBeNull();
       expect(risk.dockTurnMinutes).toBeLessThanOrEqual(
         risk.appointmentSlotMinutes
       );
