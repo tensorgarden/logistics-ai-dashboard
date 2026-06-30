@@ -89,6 +89,7 @@ export interface DockAppointmentRisk {
   checkInMode: DockCheckInMode;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
+  cutoffRiskMinutes: number | null;
   status: DockAppointmentStatus;
   mitigation: string;
 }

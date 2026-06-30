@@ -197,6 +197,25 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("dock interventions expose cutoff pressure before missed appointments", () => {
+    const interventions = demoDockAppointmentRisks.filter(
+      (risk) => risk.status !== "ready"
+    );
+
+    expect(interventions.length).toBeGreaterThanOrEqual(1);
+    for (const risk of interventions) {
+      expect(
+        risk.cutoffRiskMinutes,
+        `${risk.facility} should show cutoff pressure for dispatchers`
+      ).not.toBeNull();
+      expect(risk.cutoffRiskMinutes!).toBeGreaterThan(0);
+      expect(risk.cutoffRiskMinutes!).toBeLessThanOrEqual(risk.etaMinutesAway);
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /cutoff|receiver closes|overtime/
+      );
+    }
+  });
+
   it("ready dock appointments fit the reserved slot and avoid manual gate check-in", () => {
     const readyAppointments = demoDockAppointmentRisks.filter(
       (risk) => risk.status === "ready"
@@ -208,6 +227,7 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       expect(risk.checkInMode).toBe("digital");
       expect(risk.receiverConstraint).toBe("none");
       expect(risk.rescheduleByMinutes).toBeNull();
+      expect(risk.cutoffRiskMinutes).toBeNull();
       expect(risk.dockTurnMinutes).toBeLessThanOrEqual(
         risk.appointmentSlotMinutes
       );

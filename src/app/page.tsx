@@ -552,6 +552,12 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.cutoffRiskMinutes ? `${risk.cutoffRiskMinutes}m` : "clear"}
+                  </div>
+                  <div>cutoff risk</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.receiverConstraint.replace("_", " ")}
                   </div>
                   <div>constraint</div>

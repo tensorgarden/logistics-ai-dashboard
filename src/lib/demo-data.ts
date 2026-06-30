@@ -713,9 +713,10 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     checkInMode: "manual",
     receiverConstraint: "yard_congestion",
     rescheduleByMinutes: 20,
+    cutoffRiskMinutes: 35,
     status: "at_risk",
     mitigation:
-      "Move the appointment to a 90-minute unloading slot, stage receiving labor now, and send a digital gate pass before arrival.",
+      "Move the appointment to a 90-minute unloading slot before the 35-minute shipping cutoff, stage receiving labor now, and send a digital gate pass before arrival.",
   },
   {
     shipmentId: "shp_007",
@@ -728,6 +729,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     checkInMode: "digital",
     receiverConstraint: "none",
     rescheduleByMinutes: null,
+    cutoffRiskMinutes: null,
     status: "ready",
     mitigation:
       "Keep Dock 4 reserved and notify the forklift lead when the truck crosses the 15-minute geofence.",
@@ -743,9 +745,10 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     checkInMode: "digital",
     receiverConstraint: "receiver_closed",
     rescheduleByMinutes: 10,
+    cutoffRiskMinutes: 12,
     status: "blocked",
     mitigation:
-      "Escalate staging immediately and rebook before the receiver closes at 15:30 because the live ETA is inside the appointment window.",
+      "Escalate staging immediately and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
   },
 ];
 
