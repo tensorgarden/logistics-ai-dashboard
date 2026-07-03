@@ -233,4 +233,32 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       );
     }
   });
+
+  it("dock appointment records expose gate validation readiness", () => {
+    const validationStatuses = new Set(["validated", "needs_review", "missing"]);
+    const readyAppointments = demoDockAppointmentRisks.filter(
+      (risk) => risk.status === "ready"
+    );
+    const interventions = demoDockAppointmentRisks.filter(
+      (risk) => risk.status !== "ready"
+    );
+
+    for (const risk of demoDockAppointmentRisks) {
+      expect(validationStatuses.has(risk.gateValidationStatus)).toBe(true);
+    }
+
+    for (const risk of readyAppointments) {
+      expect(risk.gateValidationStatus).toBe("validated");
+    }
+
+    for (const risk of interventions) {
+      expect(["needs_review", "missing"]).toContain(
+        risk.gateValidationStatus
+      );
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /gate|pass|check-in|validation|receiver|rebook|staging/
+      );
+    }
+  });
+
 });
