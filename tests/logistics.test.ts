@@ -261,4 +261,33 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("dock appointment records expose pre-arrival packet readiness", () => {
+    const preArrivalStatuses = new Set([
+      "complete",
+      "missing_vehicle_id",
+      "cargo_mismatch",
+    ]);
+    const readyAppointments = demoDockAppointmentRisks.filter(
+      (risk) => risk.status === "ready"
+    );
+    const interventions = demoDockAppointmentRisks.filter(
+      (risk) => risk.status !== "ready"
+    );
+
+    for (const risk of demoDockAppointmentRisks) {
+      expect(preArrivalStatuses.has(risk.preArrivalPacketStatus)).toBe(true);
+    }
+
+    for (const risk of readyAppointments) {
+      expect(risk.preArrivalPacketStatus).toBe("complete");
+    }
+
+    for (const risk of interventions) {
+      expect(risk.preArrivalPacketStatus).not.toBe("complete");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /vehicle id|cargo|gate pass|carrier portal|appointment packet/
+      );
+    }
+  });
+
 });

@@ -62,6 +62,11 @@ export type DockCheckInMode = "digital" | "manual";
 
 export type DockGateValidationStatus = "validated" | "needs_review" | "missing";
 
+export type DockPreArrivalPacketStatus =
+  | "complete"
+  | "missing_vehicle_id"
+  | "cargo_mismatch";
+
 export type DockAppointmentConstraint =
   | "yard_congestion"
   | "receiver_closed"
@@ -90,6 +95,7 @@ export interface DockAppointmentRisk {
   freightStaged: boolean;
   checkInMode: DockCheckInMode;
   gateValidationStatus: DockGateValidationStatus;
+  preArrivalPacketStatus: DockPreArrivalPacketStatus;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;

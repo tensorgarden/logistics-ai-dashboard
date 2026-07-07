@@ -550,6 +550,12 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.preArrivalPacketStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>pre-arrival packet</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.rescheduleByMinutes
                       ? `${risk.rescheduleByMinutes}m`
                       : "monitor"}

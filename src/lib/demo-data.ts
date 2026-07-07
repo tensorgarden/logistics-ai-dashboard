@@ -712,12 +712,13 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     freightStaged: false,
     checkInMode: "manual",
     gateValidationStatus: "missing",
+    preArrivalPacketStatus: "missing_vehicle_id",
     receiverConstraint: "yard_congestion",
     rescheduleByMinutes: 20,
     cutoffRiskMinutes: 35,
     status: "at_risk",
     mitigation:
-      "Move the appointment to a 90-minute unloading slot before the 35-minute shipping cutoff, stage receiving labor now, and send a digital gate pass before arrival.",
+      "Move the appointment to a 90-minute unloading slot before the 35-minute shipping cutoff, stage receiving labor now, capture the tractor vehicle ID in the carrier portal, and send a digital gate pass before arrival.",
   },
   {
     shipmentId: "shp_007",
@@ -729,6 +730,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     freightStaged: true,
     checkInMode: "digital",
     gateValidationStatus: "validated",
+    preArrivalPacketStatus: "complete",
     receiverConstraint: "none",
     rescheduleByMinutes: null,
     cutoffRiskMinutes: null,
@@ -746,12 +748,13 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     freightStaged: false,
     checkInMode: "digital",
     gateValidationStatus: "needs_review",
+    preArrivalPacketStatus: "cargo_mismatch",
     receiverConstraint: "receiver_closed",
     rescheduleByMinutes: 10,
     cutoffRiskMinutes: 12,
     status: "blocked",
     mitigation:
-      "Escalate staging immediately and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
+      "Escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
   },
 ];
 
