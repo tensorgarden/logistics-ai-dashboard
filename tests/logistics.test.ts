@@ -290,4 +290,32 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("dock door assignments support live yard reallocation", () => {
+    const validStatuses = new Set([
+      "confirmed",
+      "reassignment_required",
+      "unassigned",
+    ]);
+
+    for (const risk of demoDockAppointmentRisks) {
+      expect(validStatuses.has(risk.dockDoorAssignmentStatus)).toBe(true);
+
+      if (risk.status === "ready") {
+        expect(risk.dockDoorAssignmentStatus).toBe("confirmed");
+        expect(risk.assignedDockDoor).not.toBeNull();
+      } else {
+        expect(risk.dockDoorAssignmentStatus).not.toBe("confirmed");
+        expect(risk.mitigation.toLowerCase()).toMatch(/dock|door|reassign/);
+      }
+
+      if (risk.dockDoorAssignmentStatus === "reassignment_required") {
+        expect(risk.assignedDockDoor).not.toBeNull();
+      }
+
+      if (risk.dockDoorAssignmentStatus === "unassigned") {
+        expect(risk.assignedDockDoor).toBeNull();
+      }
+    }
+  });
+
 });

@@ -74,6 +74,11 @@ export type DockAppointmentConstraint =
   | "slot_overrun"
   | "none";
 
+export type DockDoorAssignmentStatus =
+  | "confirmed"
+  | "reassignment_required"
+  | "unassigned";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -96,6 +101,8 @@ export interface DockAppointmentRisk {
   checkInMode: DockCheckInMode;
   gateValidationStatus: DockGateValidationStatus;
   preArrivalPacketStatus: DockPreArrivalPacketStatus;
+  assignedDockDoor: string | null;
+  dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;

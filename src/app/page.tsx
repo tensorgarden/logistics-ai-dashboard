@@ -556,6 +556,12 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.assignedDockDoor ?? "no door"}
+                  </div>
+                  <div>{risk.dockDoorAssignmentStatus.replaceAll("_", " ")}</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.rescheduleByMinutes
                       ? `${risk.rescheduleByMinutes}m`
                       : "monitor"}
