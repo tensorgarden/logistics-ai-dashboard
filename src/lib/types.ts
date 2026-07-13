@@ -79,6 +79,13 @@ export type DockDoorAssignmentStatus =
   | "reassignment_required"
   | "unassigned";
 
+export type DockFlowDirection = "inbound" | "outbound";
+
+export type DockDoorFlowConflict =
+  | "none"
+  | "inbound_overrun"
+  | "outbound_pickup_at_risk";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -103,6 +110,8 @@ export interface DockAppointmentRisk {
   preArrivalPacketStatus: DockPreArrivalPacketStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
+  dockFlowDirection: DockFlowDirection;
+  dockDoorFlowConflict: DockDoorFlowConflict;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;

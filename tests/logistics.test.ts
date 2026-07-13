@@ -290,6 +290,29 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("shared dock doors expose inbound and outbound flow conflicts", () => {
+    const validDirections = new Set(["inbound", "outbound"]);
+    const conflictRecords = demoDockAppointmentRisks.filter(
+      (risk) => risk.dockDoorFlowConflict !== "none"
+    );
+
+    expect(conflictRecords.length).toBeGreaterThanOrEqual(1);
+    for (const risk of demoDockAppointmentRisks) {
+      expect(validDirections.has(risk.dockFlowDirection)).toBe(true);
+
+      if (risk.status === "ready") {
+        expect(risk.dockDoorFlowConflict).toBe("none");
+      }
+    }
+
+    for (const risk of conflictRecords) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /inbound|outbound|shared-door/
+      );
+    }
+  });
+
   it("dock door assignments support live yard reallocation", () => {
     const validStatuses = new Set([
       "confirmed",

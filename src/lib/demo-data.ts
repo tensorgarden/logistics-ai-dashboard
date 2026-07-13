@@ -715,12 +715,14 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     preArrivalPacketStatus: "missing_vehicle_id",
     assignedDockDoor: "Dock 7",
     dockDoorAssignmentStatus: "reassignment_required",
+    dockFlowDirection: "inbound",
+    dockDoorFlowConflict: "inbound_overrun",
     receiverConstraint: "yard_congestion",
     rescheduleByMinutes: 20,
     cutoffRiskMinutes: 35,
     status: "at_risk",
     mitigation:
-      "Reassign the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, stage receiving labor now, capture the tractor vehicle ID in the carrier portal, and send a digital gate pass before arrival.",
+      "Clear the inbound overrun by reassigning the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, stage receiving labor now, capture the tractor vehicle ID in the carrier portal, and send a digital gate pass before arrival.",
   },
   {
     shipmentId: "shp_007",
@@ -735,6 +737,8 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     preArrivalPacketStatus: "complete",
     assignedDockDoor: "Dock 4",
     dockDoorAssignmentStatus: "confirmed",
+    dockFlowDirection: "outbound",
+    dockDoorFlowConflict: "none",
     receiverConstraint: "none",
     rescheduleByMinutes: null,
     cutoffRiskMinutes: null,
@@ -755,12 +759,14 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     preArrivalPacketStatus: "cargo_mismatch",
     assignedDockDoor: null,
     dockDoorAssignmentStatus: "unassigned",
+    dockFlowDirection: "outbound",
+    dockDoorFlowConflict: "outbound_pickup_at_risk",
     receiverConstraint: "receiver_closed",
     rescheduleByMinutes: 10,
     cutoffRiskMinutes: 12,
     status: "blocked",
     mitigation:
-      "Keep the dock door unassigned, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
+      "Protect the outbound pickup from the shared-door conflict: keep the dock door unassigned, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
   },
 ];
 
