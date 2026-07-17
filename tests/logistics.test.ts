@@ -313,6 +313,29 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("dock appointments confirm unloading resources before ready status", () => {
+    const resourceGaps = demoDockAppointmentRisks.filter(
+      (risk) =>
+        risk.laborReadiness !== "crew_confirmed" ||
+        risk.equipmentReadiness !== "ready"
+    );
+
+    expect(resourceGaps.length).toBeGreaterThanOrEqual(1);
+    for (const risk of demoDockAppointmentRisks) {
+      if (risk.status === "ready") {
+        expect(risk.laborReadiness).toBe("crew_confirmed");
+        expect(risk.equipmentReadiness).toBe("ready");
+      }
+    }
+
+    for (const risk of resourceGaps) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /crew|labor|forklift|equipment/
+      );
+    }
+  });
+
   it("dock door assignments support live yard reallocation", () => {
     const validStatuses = new Set([
       "confirmed",

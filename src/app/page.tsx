@@ -568,6 +568,18 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.laborReadiness.replaceAll("_", " ")}
+                  </div>
+                  <div>unload crew</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.equipmentReadiness.replaceAll("_", " ")}
+                  </div>
+                  <div>dock equipment</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.rescheduleByMinutes
                       ? `${risk.rescheduleByMinutes}m`
                       : "monitor"}

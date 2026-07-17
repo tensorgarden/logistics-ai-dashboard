@@ -86,6 +86,10 @@ export type DockDoorFlowConflict =
   | "inbound_overrun"
   | "outbound_pickup_at_risk";
 
+export type DockLaborReadiness = "crew_confirmed" | "crew_shortfall";
+
+export type DockEquipmentReadiness = "ready" | "forklift_unavailable";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -112,6 +116,8 @@ export interface DockAppointmentRisk {
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;
   dockDoorFlowConflict: DockDoorFlowConflict;
+  laborReadiness: DockLaborReadiness;
+  equipmentReadiness: DockEquipmentReadiness;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;
