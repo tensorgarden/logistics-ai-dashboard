@@ -580,6 +580,18 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.trailerSpottingStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>
+                    {risk.spotMoveEtaMinutes === null
+                      ? "move ETA unplanned"
+                      : risk.spotMoveEtaMinutes === 0
+                        ? "at dock"
+                        : `spot in ${risk.spotMoveEtaMinutes}m`}
+                  </div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.rescheduleByMinutes
                       ? `${risk.rescheduleByMinutes}m`
                       : "monitor"}

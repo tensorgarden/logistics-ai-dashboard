@@ -719,12 +719,14 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     dockDoorFlowConflict: "inbound_overrun",
     laborReadiness: "crew_shortfall",
     equipmentReadiness: "forklift_unavailable",
+    trailerSpottingStatus: "spotter_queued",
+    spotMoveEtaMinutes: 12,
     receiverConstraint: "yard_congestion",
     rescheduleByMinutes: 20,
     cutoffRiskMinutes: 35,
     status: "at_risk",
     mitigation:
-      "Clear the inbound overrun by reassigning the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, stage receiving labor and reserve a forklift now, capture the tractor vehicle ID in the carrier portal, and send a digital gate pass before arrival.",
+      "Clear the inbound overrun by reassigning the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, dispatch the yard spotter for the queued 12-minute trailer move, stage receiving labor and reserve a forklift now, capture the tractor vehicle ID in the carrier portal, and send a digital gate pass before arrival.",
   },
   {
     shipmentId: "shp_007",
@@ -743,6 +745,8 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     dockDoorFlowConflict: "none",
     laborReadiness: "crew_confirmed",
     equipmentReadiness: "ready",
+    trailerSpottingStatus: "spotted_at_door",
+    spotMoveEtaMinutes: 0,
     receiverConstraint: "none",
     rescheduleByMinutes: null,
     cutoffRiskMinutes: null,
@@ -767,12 +771,14 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     dockDoorFlowConflict: "outbound_pickup_at_risk",
     laborReadiness: "crew_shortfall",
     equipmentReadiness: "ready",
+    trailerSpottingStatus: "trailer_location_unverified",
+    spotMoveEtaMinutes: null,
     receiverConstraint: "receiver_closed",
     rescheduleByMinutes: 10,
     cutoffRiskMinutes: 12,
     status: "blocked",
     mitigation:
-      "Protect the outbound pickup from the shared-door conflict: keep the dock door unassigned, confirm outbound crew coverage, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
+      "Protect the outbound pickup from the shared-door conflict: keep the dock door unassigned, locate and verify the trailer in the yard before dispatching a spotter, confirm outbound crew coverage, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
   },
 ];
 

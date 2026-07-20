@@ -90,6 +90,11 @@ export type DockLaborReadiness = "crew_confirmed" | "crew_shortfall";
 
 export type DockEquipmentReadiness = "ready" | "forklift_unavailable";
 
+export type DockTrailerSpottingStatus =
+  | "spotted_at_door"
+  | "spotter_queued"
+  | "trailer_location_unverified";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -118,6 +123,8 @@ export interface DockAppointmentRisk {
   dockDoorFlowConflict: DockDoorFlowConflict;
   laborReadiness: DockLaborReadiness;
   equipmentReadiness: DockEquipmentReadiness;
+  trailerSpottingStatus: DockTrailerSpottingStatus;
+  spotMoveEtaMinutes: number | null;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;

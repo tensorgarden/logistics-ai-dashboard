@@ -336,6 +336,49 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("requires ready appointments to have the trailer spotted at the dock", () => {
+    const spottingGaps = demoDockAppointmentRisks.filter(
+      (risk) => risk.trailerSpottingStatus !== "spotted_at_door"
+    );
+
+    expect(spottingGaps.length).toBeGreaterThanOrEqual(1);
+    for (const risk of demoDockAppointmentRisks) {
+      if (risk.status === "ready") {
+        expect(risk.trailerSpottingStatus).toBe("spotted_at_door");
+        expect(risk.spotMoveEtaMinutes).toBe(0);
+      }
+    }
+
+    for (const risk of spottingGaps) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /spotter|hostler|trailer|yard move/
+      );
+    }
+  });
+
+  it("keeps trailer spotting plans measurable and operationally coherent", () => {
+    const queuedMoves = demoDockAppointmentRisks.filter(
+      (risk) => risk.trailerSpottingStatus === "spotter_queued"
+    );
+    const unverifiedTrailers = demoDockAppointmentRisks.filter(
+      (risk) => risk.trailerSpottingStatus === "trailer_location_unverified"
+    );
+
+    expect(queuedMoves.length).toBeGreaterThanOrEqual(1);
+    expect(unverifiedTrailers.length).toBeGreaterThanOrEqual(1);
+    for (const risk of queuedMoves) {
+      expect(risk.spotMoveEtaMinutes).not.toBeNull();
+      expect(risk.spotMoveEtaMinutes!).toBeGreaterThan(0);
+      expect(risk.spotMoveEtaMinutes!).toBeLessThanOrEqual(15);
+    }
+
+    for (const risk of unverifiedTrailers) {
+      expect(risk.spotMoveEtaMinutes).toBeNull();
+      expect(risk.mitigation.toLowerCase()).toMatch(/locate|verify|trailer/);
+    }
+  });
+
   it("dock door assignments support live yard reallocation", () => {
     const validStatuses = new Set([
       "confirmed",
