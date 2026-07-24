@@ -379,6 +379,46 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("tracks spotter request age against call-to-door targets", () => {
+    const queuedMoves = demoDockAppointmentRisks.filter(
+      (risk) => risk.trailerSpottingStatus === "spotter_queued"
+    );
+    const unplannedMoves = demoDockAppointmentRisks.filter(
+      (risk) => risk.trailerSpottingStatus === "trailer_location_unverified"
+    );
+    let projectedBreachCount = 0;
+
+    for (const risk of demoDockAppointmentRisks) {
+      expect(risk.spotMoveSlaMinutes).toBeGreaterThan(0);
+
+      if (risk.status === "ready") {
+        expect(risk.spotMoveWaitMinutes).toBe(0);
+        expect(risk.spotMoveEtaMinutes).toBe(0);
+      }
+    }
+
+    for (const risk of queuedMoves) {
+      expect(risk.spotMoveWaitMinutes).not.toBeNull();
+      expect(risk.spotMoveWaitMinutes!).toBeGreaterThan(0);
+      expect(risk.spotMoveEtaMinutes).not.toBeNull();
+
+      const projectedTurnMinutes =
+        risk.spotMoveWaitMinutes! + risk.spotMoveEtaMinutes!;
+      if (projectedTurnMinutes > risk.spotMoveSlaMinutes) {
+        projectedBreachCount += 1;
+        expect(risk.mitigation.toLowerCase()).toMatch(
+          /escalat|call-to-door|spotter target/
+        );
+      }
+    }
+
+    expect(projectedBreachCount).toBeGreaterThanOrEqual(1);
+    for (const risk of unplannedMoves) {
+      expect(risk.spotMoveWaitMinutes).toBeNull();
+      expect(risk.spotMoveEtaMinutes).toBeNull();
+    }
+  });
+
   it("dock door assignments support live yard reallocation", () => {
     const validStatuses = new Set([
       "confirmed",

@@ -589,6 +589,11 @@ function DockAppointmentPanel() {
                         ? "at dock"
                         : `spot in ${risk.spotMoveEtaMinutes}m`}
                   </div>
+                  <div className="mt-1 text-[11px] font-medium text-slate-600">
+                    {risk.spotMoveWaitMinutes === null
+                      ? `call-to-door not started · ${risk.spotMoveSlaMinutes}m target`
+                      : `projected ${risk.spotMoveWaitMinutes + (risk.spotMoveEtaMinutes ?? 0)}m / ${risk.spotMoveSlaMinutes}m target`}
+                  </div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">

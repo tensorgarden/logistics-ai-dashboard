@@ -125,6 +125,8 @@ export interface DockAppointmentRisk {
   equipmentReadiness: DockEquipmentReadiness;
   trailerSpottingStatus: DockTrailerSpottingStatus;
   spotMoveEtaMinutes: number | null;
+  spotMoveWaitMinutes: number | null;
+  spotMoveSlaMinutes: number;
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;
