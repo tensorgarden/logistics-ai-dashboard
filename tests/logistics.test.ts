@@ -290,6 +290,35 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("keeps dock appointments on hold until trailer seals are verified", () => {
+    const sealExceptions = demoDockAppointmentRisks.filter(
+      (risk) => risk.sealVerificationStatus !== "verified_intact"
+    );
+    const exceptionStatuses = new Set(
+      sealExceptions.map((risk) => risk.sealVerificationStatus)
+    );
+
+    expect(exceptionStatuses).toEqual(
+      new Set(["pending_verification", "damaged_hold"])
+    );
+    for (const risk of demoDockAppointmentRisks) {
+      if (risk.status === "ready") {
+        expect(risk.sealVerificationStatus).toBe("verified_intact");
+      }
+    }
+
+    for (const risk of sealExceptions) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /seal|chain-of-custody|security hold/
+      );
+
+      if (risk.sealVerificationStatus === "damaged_hold") {
+        expect(risk.status).toBe("blocked");
+      }
+    }
+  });
+
   it("shared dock doors expose inbound and outbound flow conflicts", () => {
     const validDirections = new Set(["inbound", "outbound"]);
     const conflictRecords = demoDockAppointmentRisks.filter(

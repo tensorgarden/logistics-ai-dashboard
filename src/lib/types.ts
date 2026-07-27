@@ -95,6 +95,11 @@ export type DockTrailerSpottingStatus =
   | "spotter_queued"
   | "trailer_location_unverified";
 
+export type DockSealVerificationStatus =
+  | "verified_intact"
+  | "pending_verification"
+  | "damaged_hold";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -117,6 +122,7 @@ export interface DockAppointmentRisk {
   checkInMode: DockCheckInMode;
   gateValidationStatus: DockGateValidationStatus;
   preArrivalPacketStatus: DockPreArrivalPacketStatus;
+  sealVerificationStatus: DockSealVerificationStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;

@@ -713,6 +713,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     checkInMode: "manual",
     gateValidationStatus: "missing",
     preArrivalPacketStatus: "missing_vehicle_id",
+    sealVerificationStatus: "pending_verification",
     assignedDockDoor: "Dock 7",
     dockDoorAssignmentStatus: "reassignment_required",
     dockFlowDirection: "inbound",
@@ -728,7 +729,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     cutoffRiskMinutes: 35,
     status: "at_risk",
     mitigation:
-      "Clear the inbound overrun by reassigning the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, dispatch and escalate the yard spotter because 6 minutes waiting plus a 12-minute move projects an 18-minute turn against the 15-minute call-to-door target, stage receiving labor and reserve a forklift now, capture the tractor vehicle ID in the carrier portal, and send a digital gate pass before arrival.",
+      "Clear the inbound overrun by reassigning the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, dispatch and escalate the yard spotter because 6 minutes waiting plus a 12-minute move projects an 18-minute turn against the 15-minute call-to-door target, stage receiving labor and reserve a forklift now, capture the tractor vehicle ID in the carrier portal, verify the trailer seal and record chain-of-custody evidence at the gate, and send a digital gate pass before arrival.",
   },
   {
     shipmentId: "shp_007",
@@ -741,6 +742,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     checkInMode: "digital",
     gateValidationStatus: "validated",
     preArrivalPacketStatus: "complete",
+    sealVerificationStatus: "verified_intact",
     assignedDockDoor: "Dock 4",
     dockDoorAssignmentStatus: "confirmed",
     dockFlowDirection: "outbound",
@@ -769,6 +771,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     checkInMode: "digital",
     gateValidationStatus: "needs_review",
     preArrivalPacketStatus: "cargo_mismatch",
+    sealVerificationStatus: "damaged_hold",
     assignedDockDoor: null,
     dockDoorAssignmentStatus: "unassigned",
     dockFlowDirection: "outbound",
@@ -784,7 +787,7 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     cutoffRiskMinutes: 12,
     status: "blocked",
     mitigation:
-      "Protect the outbound pickup from the shared-door conflict: keep the dock door unassigned, locate and verify the trailer in the yard before dispatching a spotter, confirm outbound crew coverage, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
+      "Protect the outbound pickup from the shared-door conflict: place the damaged trailer seal under a chain-of-custody security hold, keep the dock door unassigned, locate and verify the trailer in the yard before dispatching a spotter, confirm outbound crew coverage, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window.",
   },
 ];
 
