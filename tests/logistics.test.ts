@@ -476,4 +476,40 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("requires a verified restraint and leveler interlock before dock service", () => {
+    const readyAppointments = demoDockAppointmentRisks.filter(
+      (risk) => risk.status === "ready"
+    );
+
+    expect(readyAppointments.length).toBeGreaterThanOrEqual(1);
+    for (const risk of readyAppointments) {
+      expect(risk.dockSafetyInterlockStatus).toBe("verified_ready");
+    }
+  });
+
+  it("routes pending restraints and leveler faults to distinct intervention lanes", () => {
+    const interlockExceptions = demoDockAppointmentRisks.filter(
+      (risk) => risk.dockSafetyInterlockStatus !== "verified_ready"
+    );
+    const exceptionStates = new Set(
+      interlockExceptions.map((risk) => risk.dockSafetyInterlockStatus)
+    );
+
+    expect(exceptionStates).toEqual(
+      new Set(["restraint_pending", "leveler_fault_hold"])
+    );
+    for (const risk of interlockExceptions) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(/restraint|leveler|dockboard/);
+
+      if (risk.dockSafetyInterlockStatus === "restraint_pending") {
+        expect(risk.status).toBe("at_risk");
+      }
+
+      if (risk.dockSafetyInterlockStatus === "leveler_fault_hold") {
+        expect(risk.status).toBe("blocked");
+      }
+    }
+  });
+
 });

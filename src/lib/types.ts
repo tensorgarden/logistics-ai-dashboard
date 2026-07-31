@@ -100,6 +100,11 @@ export type DockSealVerificationStatus =
   | "pending_verification"
   | "damaged_hold";
 
+export type DockSafetyInterlockStatus =
+  | "verified_ready"
+  | "restraint_pending"
+  | "leveler_fault_hold";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -123,6 +128,7 @@ export interface DockAppointmentRisk {
   gateValidationStatus: DockGateValidationStatus;
   preArrivalPacketStatus: DockPreArrivalPacketStatus;
   sealVerificationStatus: DockSealVerificationStatus;
+  dockSafetyInterlockStatus: DockSafetyInterlockStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;

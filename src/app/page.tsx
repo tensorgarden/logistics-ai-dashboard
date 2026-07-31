@@ -562,6 +562,12 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.dockSafetyInterlockStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>restraint / leveler</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.assignedDockDoor ?? "no door"}
                   </div>
                   <div>{risk.dockDoorAssignmentStatus.replaceAll("_", " ")}</div>
