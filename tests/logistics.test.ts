@@ -8,6 +8,7 @@ import {
   demoPortDwellRisks,
   demoDockAppointmentRisks,
 } from "@/lib/demo-data";
+import { isDockServiceReleased } from "@/lib/types";
 
 describe("Logistics AI Dashboard — demo data integrity", () => {
   it("has at least 10 shipments", () => {
@@ -509,6 +510,65 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       if (risk.dockSafetyInterlockStatus === "leveler_fault_hold") {
         expect(risk.status).toBe("blocked");
       }
+    }
+  });
+
+  it("requires ready dock appointments to have stable trailer support", () => {
+    const supportedStates = new Set([
+      "tractor_coupled",
+      "fixed_jacks_verified",
+    ]);
+    const readyAppointments = demoDockAppointmentRisks.filter(
+      (risk) => risk.status === "ready"
+    );
+
+    expect(readyAppointments.length).toBeGreaterThanOrEqual(1);
+    for (const risk of readyAppointments) {
+      expect(supportedStates.has(risk.trailerSupportStatus)).toBe(true);
+    }
+  });
+
+  it("blocks unsupported uncoupled trailers before forklift entry", () => {
+    const supportStates = new Set(
+      demoDockAppointmentRisks.map((risk) => risk.trailerSupportStatus)
+    );
+    const supportHolds = demoDockAppointmentRisks.filter(
+      (risk) => risk.trailerSupportStatus === "support_required_hold"
+    );
+
+    expect(supportStates).toEqual(
+      new Set([
+        "tractor_coupled",
+        "fixed_jacks_verified",
+        "support_required_hold",
+      ])
+    );
+    expect(supportHolds.length).toBeGreaterThanOrEqual(1);
+    for (const risk of supportHolds) {
+      expect(risk.status).toBe("blocked");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /uncoupled|fixed jack|trailer support|upend/
+      );
+    }
+  });
+
+  it("holds dock service when an otherwise-ready trailer lacks stable support", () => {
+    const readySupported = demoDockAppointmentRisks.find(
+      (risk) => risk.status === "ready"
+    );
+    expect(readySupported).toBeDefined();
+
+    const unsupportedReady = {
+      ...readySupported!,
+      trailerSupportStatus: "support_required_hold" as const,
+    };
+
+    expect(isDockServiceReleased(readySupported!)).toBe(true);
+    expect(isDockServiceReleased(unsupportedReady)).toBe(false);
+    for (const risk of demoDockAppointmentRisks.filter(
+      (appointment) => appointment.status !== "ready"
+    )) {
+      expect(isDockServiceReleased(risk)).toBe(false);
     }
   });
 

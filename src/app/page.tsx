@@ -13,6 +13,7 @@ import type {
   Route,
   DockAppointmentRisk,
 } from "@/lib/types";
+import { isDockServiceReleased } from "@/lib/types";
 
 // --- Reusable components ---
 
@@ -499,6 +500,7 @@ function DockAppointmentPanel() {
       <div className="space-y-3">
         {demoDockAppointmentRisks.map((risk) => {
           const shipment = demoShipments.find((s) => s.id === risk.shipmentId);
+          const serviceReleased = isDockServiceReleased(risk);
           return (
             <div
               key={`${risk.shipmentId}-${risk.facility}`}
@@ -565,6 +567,20 @@ function DockAppointmentPanel() {
                     {risk.dockSafetyInterlockStatus.replaceAll("_", " ")}
                   </div>
                   <div>restraint / leveler</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.trailerSupportStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>coupling / fixed jacks</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div
+                    className={`font-bold ${serviceReleased ? "text-emerald-700" : "text-red-700"}`}
+                  >
+                    {serviceReleased ? "released" : "hold"}
+                  </div>
+                  <div>forklift / service</div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">

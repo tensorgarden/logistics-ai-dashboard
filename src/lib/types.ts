@@ -105,6 +105,11 @@ export type DockSafetyInterlockStatus =
   | "restraint_pending"
   | "leveler_fault_hold";
 
+export type DockTrailerSupportStatus =
+  | "tractor_coupled"
+  | "fixed_jacks_verified"
+  | "support_required_hold";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -129,6 +134,7 @@ export interface DockAppointmentRisk {
   preArrivalPacketStatus: DockPreArrivalPacketStatus;
   sealVerificationStatus: DockSealVerificationStatus;
   dockSafetyInterlockStatus: DockSafetyInterlockStatus;
+  trailerSupportStatus: DockTrailerSupportStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;
@@ -144,6 +150,14 @@ export interface DockAppointmentRisk {
   cutoffRiskMinutes: number | null;
   status: DockAppointmentStatus;
   mitigation: string;
+}
+
+export function isDockServiceReleased(risk: DockAppointmentRisk): boolean {
+  return (
+    risk.status === "ready" &&
+    (risk.trailerSupportStatus === "tractor_coupled" ||
+      risk.trailerSupportStatus === "fixed_jacks_verified")
+  );
 }
 
 export interface RouteSegment {
