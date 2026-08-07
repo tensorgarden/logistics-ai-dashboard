@@ -572,4 +572,53 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("gates refrigerated dock service on verified cold-chain status", () => {
+    const exceptions = demoDockAppointmentRisks.filter(
+      (risk) => risk.coldChainStatus !== "within_range_verified"
+    );
+    const exceptionStates = new Set(
+      exceptions.map((risk) => risk.coldChainStatus)
+    );
+
+    expect(exceptionStates).toEqual(
+      new Set(["pre_cool_pending", "temperature_excursion_hold"])
+    );
+    for (const risk of demoDockAppointmentRisks) {
+      if (risk.status === "ready") {
+        expect(risk.coldChainStatus).toBe("within_range_verified");
+      }
+    }
+
+    for (const risk of exceptions) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /reefer|temperature|cold.?chain|pre.?cool|quarantine/
+      );
+
+      if (risk.coldChainStatus === "pre_cool_pending") {
+        expect(risk.status).toBe("at_risk");
+      }
+
+      if (risk.coldChainStatus === "temperature_excursion_hold") {
+        expect(risk.status).toBe("blocked");
+        expect(risk.mitigation.toLowerCase()).toMatch(/quarantine|\bqa\b/);
+      }
+    }
+  });
+
+  it("holds dock service when an otherwise-ready load has a temperature excursion", () => {
+    const readyVerified = demoDockAppointmentRisks.find(
+      (risk) => risk.status === "ready"
+    );
+    expect(readyVerified).toBeDefined();
+
+    const excursionReady = {
+      ...readyVerified!,
+      coldChainStatus: "temperature_excursion_hold" as const,
+    };
+
+    expect(isDockServiceReleased(readyVerified!)).toBe(true);
+    expect(isDockServiceReleased(excursionReady)).toBe(false);
+  });
+
 });

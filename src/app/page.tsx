@@ -575,6 +575,12 @@ function DockAppointmentPanel() {
                   <div>coupling / fixed jacks</div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.coldChainStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>reefer / cold chain</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
                   <div
                     className={`font-bold ${serviceReleased ? "text-emerald-700" : "text-red-700"}`}
                   >

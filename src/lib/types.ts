@@ -110,6 +110,11 @@ export type DockTrailerSupportStatus =
   | "fixed_jacks_verified"
   | "support_required_hold";
 
+export type DockColdChainStatus =
+  | "within_range_verified"
+  | "pre_cool_pending"
+  | "temperature_excursion_hold";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -135,6 +140,7 @@ export interface DockAppointmentRisk {
   sealVerificationStatus: DockSealVerificationStatus;
   dockSafetyInterlockStatus: DockSafetyInterlockStatus;
   trailerSupportStatus: DockTrailerSupportStatus;
+  coldChainStatus: DockColdChainStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;
@@ -155,6 +161,7 @@ export interface DockAppointmentRisk {
 export function isDockServiceReleased(risk: DockAppointmentRisk): boolean {
   return (
     risk.status === "ready" &&
+    risk.coldChainStatus === "within_range_verified" &&
     (risk.trailerSupportStatus === "tractor_coupled" ||
       risk.trailerSupportStatus === "fixed_jacks_verified")
   );
