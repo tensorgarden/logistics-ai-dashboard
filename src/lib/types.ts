@@ -154,6 +154,9 @@ export interface DockAppointmentRisk {
   receiverConstraint: DockAppointmentConstraint;
   rescheduleByMinutes: number | null;
   cutoffRiskMinutes: number | null;
+  detentionFreeMinutes: number;
+  detentionHourlyRate: number;
+  estimatedDetentionCost: number;
   status: DockAppointmentStatus;
   mitigation: string;
 }

@@ -730,6 +730,9 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     receiverConstraint: "yard_congestion",
     rescheduleByMinutes: 20,
     cutoffRiskMinutes: 35,
+    detentionFreeMinutes: 60,
+    detentionHourlyRate: 65,
+    estimatedDetentionCost: 33,
     status: "at_risk",
     mitigation:
       "Clear the inbound overrun by reassigning the truck from congested Dock 7 to a 90-minute unloading slot before the 35-minute shipping cutoff, dispatch and escalate the yard spotter because 6 minutes waiting plus a 12-minute move projects an 18-minute turn against the 15-minute call-to-door target, stage receiving labor and reserve a forklift now, capture the tractor vehicle ID in the carrier portal, verify the trailer seal and record chain-of-custody evidence at the gate, keep fixed jacks supporting the uncoupled trailer, engage and confirm the trailer restraint before enabling the dock leveler, complete the leveler inspection, send a digital gate pass before arrival, and confirm reefer pre-cool and set-point verification with the carrier so the cold-chain load arrives within range.",
@@ -762,6 +765,9 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     receiverConstraint: "none",
     rescheduleByMinutes: null,
     cutoffRiskMinutes: null,
+    detentionFreeMinutes: 120,
+    detentionHourlyRate: 70,
+    estimatedDetentionCost: 0,
     status: "ready",
     mitigation:
       "Keep the tractor coupled and Dock 4 reserved with the trailer restraint engaged, the dock leveler verified ready, and the reefer set point confirmed within range, then notify the forklift lead when the truck crosses the 15-minute geofence.",
@@ -794,6 +800,9 @@ export const demoDockAppointmentRisks: DockAppointmentRisk[] = [
     receiverConstraint: "receiver_closed",
     rescheduleByMinutes: 10,
     cutoffRiskMinutes: 12,
+    detentionFreeMinutes: 45,
+    detentionHourlyRate: 85,
+    estimatedDetentionCost: 50,
     status: "blocked",
     mitigation:
       "Protect the outbound pickup from the shared-door conflict: place the damaged trailer seal under a chain-of-custody security hold, verify fixed jacks support the uncoupled trailer before forklift entry to prevent upending, isolate the failed dock leveler for repair and keep the trailer restraint engaged, keep the dock door unassigned, locate and verify the trailer in the yard before dispatching a spotter, confirm outbound crew coverage, escalate staging immediately, confirm the cargo count against the appointment packet, and rebook before the receiver closes at 15:30 because the 12-minute cutoff risk is inside the live ETA window, and quarantine the temperature-excursion load for QA review with the reefer unit download captured before any dock service.",

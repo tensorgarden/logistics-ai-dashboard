@@ -621,4 +621,51 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     expect(isDockServiceReleased(excursionReady)).toBe(false);
   });
 
+  it("tracks detention cost for every dock appointment with valid rate and free-time window", () => {
+    for (const risk of demoDockAppointmentRisks) {
+      expect(risk.detentionFreeMinutes).toBeGreaterThan(0);
+      expect(risk.detentionHourlyRate).toBeGreaterThan(0);
+      expect(risk.estimatedDetentionCost).toBeGreaterThanOrEqual(0);
+
+      const overFreeMinutes = Math.max(
+        0,
+        risk.dockTurnMinutes - risk.detentionFreeMinutes
+      );
+      const expectedCost = Math.round(
+        (overFreeMinutes / 60) * risk.detentionHourlyRate
+      );
+      expect(risk.estimatedDetentionCost).toBe(expectedCost);
+    }
+  });
+
+  it("zeroes out detention cost when the turn fits inside the free-time window", () => {
+    const noDetention = demoDockAppointmentRisks.filter(
+      (risk) => risk.dockTurnMinutes <= risk.detentionFreeMinutes
+    );
+
+    expect(noDetention.length).toBeGreaterThanOrEqual(1);
+    for (const risk of noDetention) {
+      expect(risk.estimatedDetentionCost).toBe(0);
+    }
+  });
+
+  it("surfaces detention cost pressure for appointments that overrun the free window", () => {
+    const detentionRisks = demoDockAppointmentRisks.filter(
+      (risk) => risk.dockTurnMinutes > risk.detentionFreeMinutes
+    );
+
+    expect(detentionRisks.length).toBeGreaterThanOrEqual(1);
+    for (const risk of detentionRisks) {
+      expect(risk.estimatedDetentionCost).toBeGreaterThan(0);
+      expect(risk.status).not.toBe("ready");
+    }
+  });
+
+  it("keeps detention rates within reported US carrier contract ranges", () => {
+    for (const risk of demoDockAppointmentRisks) {
+      expect(risk.detentionHourlyRate).toBeGreaterThanOrEqual(50);
+      expect(risk.detentionHourlyRate).toBeLessThanOrEqual(100);
+    }
+  });
+
 });

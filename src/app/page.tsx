@@ -644,6 +644,12 @@ function DockAppointmentPanel() {
                   <div>cutoff risk</div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
+                  <div className={`font-bold ${risk.estimatedDetentionCost > 0 ? "text-red-700" : "text-slate-800"}`}>
+                    ${risk.estimatedDetentionCost}
+                  </div>
+                  <div>detention ({risk.detentionFreeMinutes}m free)</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
                     {risk.receiverConstraint.replace("_", " ")}
                   </div>
