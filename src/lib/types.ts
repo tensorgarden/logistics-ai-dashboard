@@ -115,6 +115,11 @@ export type DockColdChainStatus =
   | "pre_cool_pending"
   | "temperature_excursion_hold";
 
+export type DockEmptyTrailerRemovalStatus =
+  | "removed_door_released"
+  | "hostler_queued"
+  | "removal_unplanned";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -141,6 +146,7 @@ export interface DockAppointmentRisk {
   dockSafetyInterlockStatus: DockSafetyInterlockStatus;
   trailerSupportStatus: DockTrailerSupportStatus;
   coldChainStatus: DockColdChainStatus;
+  emptyTrailerRemovalStatus: DockEmptyTrailerRemovalStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;

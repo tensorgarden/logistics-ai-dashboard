@@ -449,6 +449,47 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("releases the dock door only after the previous trailer is removed", () => {
+    const removalGaps = demoDockAppointmentRisks.filter(
+      (risk) => risk.emptyTrailerRemovalStatus !== "removed_door_released"
+    );
+
+    expect(removalGaps.length).toBeGreaterThanOrEqual(1);
+    for (const risk of demoDockAppointmentRisks) {
+      if (risk.status === "ready") {
+        expect(risk.emptyTrailerRemovalStatus).toBe("removed_door_released");
+      }
+    }
+
+    for (const risk of removalGaps) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /hostler|empty trailer|pull|removal/
+      );
+    }
+  });
+
+  it("distinguishes a queued trailer pull from an unplanned removal", () => {
+    const queuedPulls = demoDockAppointmentRisks.filter(
+      (risk) => risk.emptyTrailerRemovalStatus === "hostler_queued"
+    );
+    const unplannedRemovals = demoDockAppointmentRisks.filter(
+      (risk) => risk.emptyTrailerRemovalStatus === "removal_unplanned"
+    );
+
+    expect(queuedPulls.length).toBeGreaterThanOrEqual(1);
+    expect(unplannedRemovals.length).toBeGreaterThanOrEqual(1);
+
+    for (const risk of queuedPulls) {
+      expect(risk.assignedDockDoor).not.toBeNull();
+      expect(risk.mitigation.toLowerCase()).toMatch(/hostler|pull|remove/);
+    }
+
+    for (const risk of unplannedRemovals) {
+      expect(risk.mitigation.toLowerCase()).toMatch(/removal plan|empty trailer/);
+    }
+  });
+
   it("dock door assignments support live yard reallocation", () => {
     const validStatuses = new Set([
       "confirmed",
