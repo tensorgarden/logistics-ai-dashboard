@@ -8,7 +8,7 @@ import {
   demoPortDwellRisks,
   demoDockAppointmentRisks,
 } from "@/lib/demo-data";
-import { isDockServiceReleased } from "@/lib/types";
+import { isDockServiceReleased, isDetentionChargebackReady } from "@/lib/types";
 
 describe("Logistics AI Dashboard — demo data integrity", () => {
   it("has at least 10 shipments", () => {
@@ -707,6 +707,107 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
       expect(risk.detentionHourlyRate).toBeGreaterThanOrEqual(50);
       expect(risk.detentionHourlyRate).toBeLessThanOrEqual(100);
     }
+  });
+
+  it("requires carrier responsibility and a complete timestamp chain before a detention chargeback", () => {
+    const readyFixture = demoDockAppointmentRisks.find(
+      (risk) => risk.status === "ready"
+    );
+    expect(readyFixture).toBeDefined();
+
+    const billableBase = {
+      ...readyFixture!,
+      estimatedDetentionCost: 42,
+      detentionResponsibility: "carrier" as const,
+      detentionEvidenceStatus: "evidence_complete" as const,
+    };
+    expect(isDetentionChargebackReady(billableBase)).toBe(true);
+
+    expect(
+      isDetentionChargebackReady({
+        ...billableBase,
+        detentionResponsibility: "facility",
+      })
+    ).toBe(false);
+    expect(
+      isDetentionChargebackReady({
+        ...billableBase,
+        detentionResponsibility: "unattributed",
+      })
+    ).toBe(false);
+    expect(
+      isDetentionChargebackReady({
+        ...billableBase,
+        detentionEvidenceStatus: "missing_timestamps",
+      })
+    ).toBe(false);
+    expect(
+      isDetentionChargebackReady({
+        ...billableBase,
+        detentionEvidenceStatus: "conflicting_timestamps",
+      })
+    ).toBe(false);
+    expect(
+      isDetentionChargebackReady({ ...billableBase, estimatedDetentionCost: 0 })
+    ).toBe(false);
+  });
+
+  it("keeps demo detention exposure out of auto-billing until evidence is reconciled", () => {
+    const billableExposure = demoDockAppointmentRisks.filter(
+      (risk) => risk.estimatedDetentionCost > 0
+    );
+
+    expect(billableExposure.length).toBeGreaterThanOrEqual(1);
+    for (const risk of billableExposure) {
+      expect(isDetentionChargebackReady(risk)).toBe(false);
+    }
+
+    const facilityAbsorbed = demoDockAppointmentRisks.find(
+      (risk) => risk.detentionResponsibility === "facility"
+    );
+    expect(facilityAbsorbed).toBeDefined();
+    expect(facilityAbsorbed!.detentionEvidenceStatus).toBe(
+      "missing_timestamps"
+    );
+    expect(facilityAbsorbed!.mitigation.toLowerCase()).toMatch(
+      /timestamp|gate check-in|door-release/
+    );
+
+    const disputedClaim = demoDockAppointmentRisks.find(
+      (risk) => risk.detentionEvidenceStatus === "conflicting_timestamps"
+    );
+    expect(disputedClaim).toBeDefined();
+    expect(disputedClaim!.detentionResponsibility).toBe("unattributed");
+    expect(disputedClaim!.mitigation.toLowerCase()).toMatch(
+      /reconcil|clock|billing review/
+    );
+  });
+
+  it("labels detention responsibility and evidence state for every appointment", () => {
+    const responsibilities = new Set(["carrier", "facility", "unattributed"]);
+    const evidenceStates = new Set([
+      "evidence_complete",
+      "missing_timestamps",
+      "conflicting_timestamps",
+    ]);
+
+    for (const risk of demoDockAppointmentRisks) {
+      expect(responsibilities.has(risk.detentionResponsibility)).toBe(true);
+      expect(evidenceStates.has(risk.detentionEvidenceStatus)).toBe(true);
+
+      if (risk.status === "ready") {
+        expect(risk.detentionEvidenceStatus).toBe("evidence_complete");
+      }
+    }
+
+    const missing = demoDockAppointmentRisks.filter(
+      (risk) => risk.detentionEvidenceStatus === "missing_timestamps"
+    );
+    const conflicting = demoDockAppointmentRisks.filter(
+      (risk) => risk.detentionEvidenceStatus === "conflicting_timestamps"
+    );
+    expect(missing.length).toBeGreaterThanOrEqual(1);
+    expect(conflicting.length).toBeGreaterThanOrEqual(1);
   });
 
 });

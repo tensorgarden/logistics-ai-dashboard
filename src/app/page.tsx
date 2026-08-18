@@ -13,7 +13,7 @@ import type {
   Route,
   DockAppointmentRisk,
 } from "@/lib/types";
-import { isDockServiceReleased } from "@/lib/types";
+import { isDockServiceReleased, isDetentionChargebackReady } from "@/lib/types";
 
 // --- Reusable components ---
 
@@ -654,6 +654,24 @@ function DockAppointmentPanel() {
                     ${risk.estimatedDetentionCost}
                   </div>
                   <div>detention ({risk.detentionFreeMinutes}m free)</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div
+                    className={`font-bold ${isDetentionChargebackReady(risk) ? "text-emerald-700" : risk.estimatedDetentionCost > 0 ? "text-red-700" : "text-slate-800"}`}
+                  >
+                    {isDetentionChargebackReady(risk)
+                      ? "billable"
+                      : risk.estimatedDetentionCost > 0
+                        ? "hold"
+                        : "clear"}
+                  </div>
+                  <div>chargeback</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.detentionResponsibility.replaceAll("_", " ")}
+                  </div>
+                  <div>{risk.detentionEvidenceStatus.replaceAll("_", " ")}</div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">

@@ -120,6 +120,16 @@ export type DockEmptyTrailerRemovalStatus =
   | "hostler_queued"
   | "removal_unplanned";
 
+export type DockDetentionResponsibility =
+  | "carrier"
+  | "facility"
+  | "unattributed";
+
+export type DockDetentionEvidenceStatus =
+  | "evidence_complete"
+  | "missing_timestamps"
+  | "conflicting_timestamps";
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -163,6 +173,8 @@ export interface DockAppointmentRisk {
   detentionFreeMinutes: number;
   detentionHourlyRate: number;
   estimatedDetentionCost: number;
+  detentionResponsibility: DockDetentionResponsibility;
+  detentionEvidenceStatus: DockDetentionEvidenceStatus;
   status: DockAppointmentStatus;
   mitigation: string;
 }
@@ -173,6 +185,14 @@ export function isDockServiceReleased(risk: DockAppointmentRisk): boolean {
     risk.coldChainStatus === "within_range_verified" &&
     (risk.trailerSupportStatus === "tractor_coupled" ||
       risk.trailerSupportStatus === "fixed_jacks_verified")
+  );
+}
+
+export function isDetentionChargebackReady(risk: DockAppointmentRisk): boolean {
+  return (
+    risk.estimatedDetentionCost > 0 &&
+    risk.detentionResponsibility === "carrier" &&
+    risk.detentionEvidenceStatus === "evidence_complete"
   );
 }
 
