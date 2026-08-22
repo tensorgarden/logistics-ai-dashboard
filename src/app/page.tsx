@@ -501,6 +501,12 @@ function DockAppointmentPanel() {
         {demoDockAppointmentRisks.map((risk) => {
           const shipment = demoShipments.find((s) => s.id === risk.shipmentId);
           const serviceReleased = isDockServiceReleased(risk);
+          const dwellPhaseMinutes = {
+            gate_to_dock: risk.dwellBreakdown.gateToDockMinutes,
+            dock_to_service: risk.dwellBreakdown.dockToServiceMinutes,
+            service_duration: risk.dwellBreakdown.serviceDurationMinutes,
+            service_to_gate_out: risk.dwellBreakdown.serviceToGateOutMinutes,
+          }[risk.dwellBreakdown.dominantPhase];
           return (
             <div
               key={`${risk.shipmentId}-${risk.facility}`}
@@ -531,6 +537,13 @@ function DockAppointmentPanel() {
                     {risk.dockTurnMinutes}m/{risk.appointmentSlotMinutes}m
                   </div>
                   <div>turn / slot</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {dwellPhaseMinutes}m
+                  </div>
+                  <div>{risk.dwellBreakdown.dominantPhase.replaceAll("_", " ")}</div>
+                  <div>largest dwell phase</div>
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">

@@ -810,4 +810,44 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     expect(conflicting.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("decomposes dock turn time into actionable dwell phases", () => {
+    const dominantPhases = new Set<string>();
+
+    for (const risk of demoDockAppointmentRisks) {
+      const phases = risk.dwellBreakdown;
+      const phaseMinutes = [
+        phases.gateToDockMinutes,
+        phases.dockToServiceMinutes,
+        phases.serviceDurationMinutes,
+        phases.serviceToGateOutMinutes,
+      ];
+
+      for (const minutes of phaseMinutes) {
+        expect(minutes).toBeGreaterThan(0);
+      }
+      expect(phaseMinutes.reduce((total, minutes) => total + minutes, 0)).toBe(
+        risk.dockTurnMinutes
+      );
+      dominantPhases.add(phases.dominantPhase);
+    }
+
+    expect(dominantPhases.size).toBeGreaterThanOrEqual(3);
+  });
+
+  it("labels the longest dwell phase for each appointment", () => {
+    for (const risk of demoDockAppointmentRisks) {
+      const phaseMinutes = {
+        gate_to_dock: risk.dwellBreakdown.gateToDockMinutes,
+        dock_to_service: risk.dwellBreakdown.dockToServiceMinutes,
+        service_duration: risk.dwellBreakdown.serviceDurationMinutes,
+        service_to_gate_out: risk.dwellBreakdown.serviceToGateOutMinutes,
+      };
+      const longestPhaseMinutes = Math.max(...Object.values(phaseMinutes));
+
+      expect(phaseMinutes[risk.dwellBreakdown.dominantPhase]).toBe(
+        longestPhaseMinutes
+      );
+    }
+  });
+
 });

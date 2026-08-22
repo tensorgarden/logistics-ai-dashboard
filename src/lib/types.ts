@@ -130,6 +130,20 @@ export type DockDetentionEvidenceStatus =
   | "missing_timestamps"
   | "conflicting_timestamps";
 
+export type DockDwellPhase =
+  | "gate_to_dock"
+  | "dock_to_service"
+  | "service_duration"
+  | "service_to_gate_out";
+
+export interface DockDwellBreakdown {
+  gateToDockMinutes: number;
+  dockToServiceMinutes: number;
+  serviceDurationMinutes: number;
+  serviceToGateOutMinutes: number;
+  dominantPhase: DockDwellPhase;
+}
+
 export interface PortDwellRisk {
   shipmentId: string;
   facility: string;
@@ -148,6 +162,7 @@ export interface DockAppointmentRisk {
   appointmentSlotMinutes: number;
   etaMinutesAway: number;
   dockTurnMinutes: number;
+  dwellBreakdown: DockDwellBreakdown;
   freightStaged: boolean;
   checkInMode: DockCheckInMode;
   gateValidationStatus: DockGateValidationStatus;
