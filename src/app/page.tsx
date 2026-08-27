@@ -609,6 +609,18 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.carrierArrivalStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>carrier arrival</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
+                    {risk.noShowRecoveryStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>slot recovery</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.assignedDockDoor ?? "no door"}
                   </div>
                   <div>{risk.dockDoorAssignmentStatus.replaceAll("_", " ")}</div>

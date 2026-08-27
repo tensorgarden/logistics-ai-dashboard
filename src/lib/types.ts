@@ -130,6 +130,16 @@ export type DockDetentionEvidenceStatus =
   | "missing_timestamps"
   | "conflicting_timestamps";
 
+export type DockCarrierArrivalStatus =
+  | 'on_schedule'
+  | 'late_risk'
+  | 'no_show_review';
+
+export type DockNoShowRecoveryStatus =
+  | 'not_required'
+  | 'monitor_check_in'
+  | 'operator_confirmation_required';
+
 export type DockDwellPhase =
   | "gate_to_dock"
   | "dock_to_service"
@@ -172,6 +182,8 @@ export interface DockAppointmentRisk {
   trailerSupportStatus: DockTrailerSupportStatus;
   coldChainStatus: DockColdChainStatus;
   emptyTrailerRemovalStatus: DockEmptyTrailerRemovalStatus;
+  carrierArrivalStatus: DockCarrierArrivalStatus;
+  noShowRecoveryStatus: DockNoShowRecoveryStatus;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;

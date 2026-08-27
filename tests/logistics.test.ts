@@ -850,4 +850,45 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it('routes missed carrier check-ins through slot-release review', () => {
+    const arrivalStatuses = new Set(['on_schedule', 'late_risk', 'no_show_review']);
+    const recoveryStatuses = new Set([
+      'not_required',
+      'monitor_check_in',
+      'operator_confirmation_required',
+    ]);
+    const lateRisks = demoDockAppointmentRisks.filter(
+      (risk) => risk.carrierArrivalStatus === 'late_risk'
+    );
+    const noShowReviews = demoDockAppointmentRisks.filter(
+      (risk) => risk.carrierArrivalStatus === 'no_show_review'
+    );
+
+    expect(lateRisks.length).toBeGreaterThanOrEqual(1);
+    expect(noShowReviews.length).toBeGreaterThanOrEqual(1);
+    for (const risk of demoDockAppointmentRisks) {
+      expect(arrivalStatuses.has(risk.carrierArrivalStatus)).toBe(true);
+      expect(recoveryStatuses.has(risk.noShowRecoveryStatus)).toBe(true);
+
+      if (risk.status === 'ready') {
+        expect(risk.carrierArrivalStatus).toBe('on_schedule');
+        expect(risk.noShowRecoveryStatus).toBe('not_required');
+      }
+    }
+
+    for (const risk of lateRisks) {
+      expect(risk.status).not.toBe('ready');
+      expect(risk.noShowRecoveryStatus).toBe('monitor_check_in');
+      expect(risk.mitigation.toLowerCase()).toMatch(/check-in|appointment start/);
+    }
+
+    for (const risk of noShowReviews) {
+      expect(risk.status).not.toBe('ready');
+      expect(risk.noShowRecoveryStatus).toBe('operator_confirmation_required');
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /no-show|confirm.*empty|release.*slot|reassign/
+      );
+    }
+  });
+
 });
