@@ -891,4 +891,35 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("tracks appointment confirmation ownership and timed follow-up", () => {
+    const confirmationStatuses = new Set([
+      "confirmed",
+      "carrier_follow_up_due",
+      "operator_escalation_due",
+    ]);
+    const pendingConfirmations = demoDockAppointmentRisks.filter(
+      (risk) => risk.appointmentConfirmationStatus !== "confirmed"
+    );
+
+    expect(
+      new Set(demoDockAppointmentRisks.map((risk) => risk.appointmentConfirmationStatus))
+    ).toEqual(confirmationStatuses);
+    expect(pendingConfirmations.length).toBeGreaterThanOrEqual(1);
+
+    for (const risk of demoDockAppointmentRisks) {
+      expect(confirmationStatuses.has(risk.appointmentConfirmationStatus)).toBe(true);
+      expect(risk.confirmationOwner.trim().length).toBeGreaterThan(0);
+
+      if (risk.status === "ready") {
+        expect(risk.appointmentConfirmationStatus).toBe("confirmed");
+        expect(risk.nextConfirmationDueMinutes).toBeNull();
+      } else {
+        expect(risk.appointmentConfirmationStatus).not.toBe("confirmed");
+        expect(risk.nextConfirmationDueMinutes).not.toBeNull();
+        expect(risk.nextConfirmationDueMinutes!).toBeGreaterThan(0);
+        expect(risk.mitigation.toLowerCase()).toMatch(/confirm|follow-up|escalat/);
+      }
+    }
+  });
+
 });

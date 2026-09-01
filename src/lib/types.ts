@@ -140,6 +140,11 @@ export type DockNoShowRecoveryStatus =
   | 'monitor_check_in'
   | 'operator_confirmation_required';
 
+export type DockAppointmentConfirmationStatus =
+  | 'confirmed'
+  | 'carrier_follow_up_due'
+  | 'operator_escalation_due';
+
 export type DockDwellPhase =
   | "gate_to_dock"
   | "dock_to_service"
@@ -184,6 +189,9 @@ export interface DockAppointmentRisk {
   emptyTrailerRemovalStatus: DockEmptyTrailerRemovalStatus;
   carrierArrivalStatus: DockCarrierArrivalStatus;
   noShowRecoveryStatus: DockNoShowRecoveryStatus;
+  appointmentConfirmationStatus: DockAppointmentConfirmationStatus;
+  confirmationOwner: string;
+  nextConfirmationDueMinutes: number | null;
   assignedDockDoor: string | null;
   dockDoorAssignmentStatus: DockDoorAssignmentStatus;
   dockFlowDirection: DockFlowDirection;

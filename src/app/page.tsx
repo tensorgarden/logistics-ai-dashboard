@@ -621,6 +621,20 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.appointmentConfirmationStatus.replaceAll("_", " ")}
+                  </div>
+                  <div>
+                    {risk.nextConfirmationDueMinutes === null
+                      ? "cadence complete"
+                      : `next check in ${risk.nextConfirmationDueMinutes}m`}
+                  </div>
+                  <div className="mt-1 text-[11px] font-medium text-slate-600">
+                    {risk.confirmationOwner}
+                  </div>
+                  <div>confirmation owner / cadence</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.assignedDockDoor ?? "no door"}
                   </div>
                   <div>{risk.dockDoorAssignmentStatus.replaceAll("_", " ")}</div>
