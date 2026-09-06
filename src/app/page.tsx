@@ -565,6 +565,16 @@ function DockAppointmentPanel() {
                 </div>
                 <div className="rounded-lg bg-white/70 p-2">
                   <div className="font-bold text-slate-800">
+                    {risk.gateQueueWaitMinutes === null
+                      ? 'not started'
+                      : risk.gateQueueWaitMinutes === 0
+                        ? 'clear'
+                        : `${risk.gateQueueWaitMinutes}m`}
+                  </div>
+                  <div>gate queue wait</div>
+                </div>
+                <div className="rounded-lg bg-white/70 p-2">
+                  <div className="font-bold text-slate-800">
                     {risk.preArrivalPacketStatus.replaceAll("_", " ")}
                   </div>
                   <div>pre-arrival packet</div>

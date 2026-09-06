@@ -181,6 +181,7 @@ export interface DockAppointmentRisk {
   freightStaged: boolean;
   checkInMode: DockCheckInMode;
   gateValidationStatus: DockGateValidationStatus;
+  gateQueueWaitMinutes: number | null;
   preArrivalPacketStatus: DockPreArrivalPacketStatus;
   sealVerificationStatus: DockSealVerificationStatus;
   dockSafetyInterlockStatus: DockSafetyInterlockStatus;

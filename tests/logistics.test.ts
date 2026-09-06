@@ -922,4 +922,34 @@ describe("Logistics AI Dashboard — demo data integrity", () => {
     }
   });
 
+  it("tracks gate queue wait before dock allocation", () => {
+    const queuedAppointments = demoDockAppointmentRisks.filter(
+      (risk) =>
+        risk.gateQueueWaitMinutes !== null && risk.gateQueueWaitMinutes > 0
+    );
+    const notStartedAppointments = demoDockAppointmentRisks.filter(
+      (risk) => risk.gateQueueWaitMinutes === null
+    );
+
+    expect(queuedAppointments.length).toBeGreaterThanOrEqual(1);
+    expect(notStartedAppointments.length).toBeGreaterThanOrEqual(1);
+
+    for (const risk of demoDockAppointmentRisks) {
+      if (risk.gateQueueWaitMinutes !== null) {
+        expect(risk.gateQueueWaitMinutes).toBeGreaterThanOrEqual(0);
+      }
+
+      if (risk.status === "ready") {
+        expect(risk.gateQueueWaitMinutes).toBe(0);
+      }
+    }
+
+    for (const risk of queuedAppointments) {
+      expect(risk.status).not.toBe("ready");
+      expect(risk.mitigation.toLowerCase()).toMatch(
+        /gate|queue|check-in|wait/
+      );
+    }
+  });
+
 });
